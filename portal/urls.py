@@ -6,4 +6,5 @@ app_name = 'home'
 
 urlpatterns = [
     path('', home, name='home'),
+    # path('admin-barbearia/', include('barbearia.urls', namespace='admin_barbearia')),
 ]

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Agendamentos - Barbearia{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Meus Agendamentos</h1>
+
+    {% if appointments %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Serviço</th>
+                    <th>Barbeiro</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.service.name }}</td>
+                        <td>{{ appointment.employee.user.get_full_name }}</td>
+                        <td>{{ appointment.date|date:"d/m/Y" }}</td>
+                        <td>{{ appointment.start_time|time:"H:i" }}</td>
+                        <td>{{ appointment.get_status_display }}</td>
+                        <td>
+                            {% if appointment.status == 'scheduled' %}
+                                <a href="{% url 'barbershop_booking:cancel_appointment' appointment.id %}" class="btn btn-sm btn-danger">Cancelar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Você não tem agendamentos no momento.</p>
+    {% endif %}
+
+    <a href="{% url 'barbershop_booking:service_list' %}" class="btn btn-primary">Agendar Novo Horário</a>
+</div>
+{% endblock %}
