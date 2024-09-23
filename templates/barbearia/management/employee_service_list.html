@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Serviços dos Funcionários - {{ barbershop.name }}</h1>
+<a href="{% url 'barbershop_management:employee_service_create' barbershop.id %}">Adicionar Novo Serviço de Funcionário</a>
+<table>
+    <thead>
+        <tr>
+            <th>Funcionário</th>
+            <th>Serviço</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for employee_service in employee_services %}
+        <tr>
+            <td>{{ employee_service.employee.user.get_full_name }}</td>
+            <td>{{ employee_service.service.name }}</td>
+            <td>
+                <a href="{% url 'barbershop_management:employee_service_delete' employee_service.id %}">Excluir</a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3">Nenhum serviço de funcionário cadastrado.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

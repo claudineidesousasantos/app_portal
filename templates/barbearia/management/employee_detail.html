@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Detalhes do Funcionário</h1>
+<p>Nome: {{ employee.name}}</p>
+<p>Telefone: {{ employee.phone }}</p>
+<p>Função: {{ employee.get_role_display }}</p>
+<p>Data de Contratação: {{ employee.hire_date }}</p>
+{% endblock %}

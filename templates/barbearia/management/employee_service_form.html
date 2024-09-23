@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Serviço de Funcionário</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+<a href="{% url 'barbershop_management:employee_service_list' barbershop.id %}">Voltar para a lista</a>
+{% endblock %}

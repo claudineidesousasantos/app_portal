@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - {{ barbershop.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Dashboard - {{ barbershop.name }}</h1>
+
+    {% include 'barbearia/management/dashboard_components/summary_cards.html' %}
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            {% include 'barbearia/management/dashboard_components/recent_employees.html' %}
+        </div>
+        <div class="col-md-6">
+            {% include 'barbearia/management/dashboard_components/recent_services.html' %}
+        </div>
+    </div>
+
+
+
+    <div class="row mt-4">
+        <div class="col-12">
+            {% include 'barbearia/management/dashboard_components/quick_actions.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

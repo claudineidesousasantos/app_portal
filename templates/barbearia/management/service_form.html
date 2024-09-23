@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Serviço - {{ barbershop.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{% if service %}Editar{% else %}Adicionar{% endif %} Serviço</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'barbershop_management:services' barbershop.id %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

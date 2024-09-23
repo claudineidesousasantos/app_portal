@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Funcionários</h5>
+                <p class="card-text display-4">{{ employees_count }}</p>
+                <a href="{% url 'barbershop_management:employee_list' barbershop.id %}" class="btn btn-light">Ver Funcionários</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Serviços</h5>
+                <p class="card-text display-4">{{ services_count }}</p>
+                <a href="{% url 'barbershop_management:services' barbershop.id %}" class="btn btn-light">Ver Serviços</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Agendamentos</h5>
+                <p class="card-text display-4">{{ appointments_count }}</p>
+
+            </div>
+        </div>
+    </div>
+</div>

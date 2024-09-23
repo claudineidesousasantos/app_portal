@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Confirmar Exclusão</h1>
+<p>Tem certeza que deseja excluir o serviço "{{ employee_service.service.name }}" do funcionário "{{ employee_service.employee.user.get_full_name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirmar Exclusão</button>
+</form>
+<a href="{% url 'barbershop_management:employee_service_list' employee_service.employee.barbershop.id %}">Cancelar</a>
+{% endblock %}

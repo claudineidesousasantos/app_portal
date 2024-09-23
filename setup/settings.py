@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'portal',
     'barbershop_management',
     'barbershop_booking',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'barbershop_management.middleware.BarbershopMiddleware',
 ]
 
 ROOT_URLCONF = 'setup.urls'
@@ -130,3 +133,8 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/management/login/'
+LOGIN_REDIRECT_URL = '/management/dashboard/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

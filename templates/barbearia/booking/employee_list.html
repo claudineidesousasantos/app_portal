@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Barbeiros{% endblock %}
+
+{% block content %}
+<h2>Nossos Barbeiros</h2>
+<div class="row">
+    {% for employee in employees %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ employee.user.get_full_name }}</h5>
+                <p class="card-text">Especialização: {{ employee.specialization }}</p>
+                <a href="{% url 'barbershop_booking:employee_services' employee.id %}" class="btn btn-primary">Ver Serviços</a>
+                <a href="{% url 'barbershop_booking:employee_schedule' employee.id %}" class="btn btn-secondary">Ver Agenda</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Nenhum barbeiro disponível no momento.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciamento de Barbearias - Apresentação{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="mb-4">Bem-vindo ao Gerenciamento de Barbearias</h1>
+            <p class="lead mb-5">
+                Simplifique a gestão da sua barbearia com nossa plataforma completa.
+                Gerencie funcionários, serviços e agendamentos em um só lugar!
+            </p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Gestão de Funcionários</h5>
+                    <p class="card-text">Cadastre e gerencie seus barbeiros e outros funcionários facilmente.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Catálogo de Serviços</h5>
+                    <p class="card-text">Mantenha seu catálogo de serviços atualizado e precifique com facilidade.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Agendamentos Online</h5>
+                    <p class="card-text">Permita que seus clientes agendem serviços online e gerencie sua agenda.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h2 class="mb-4">Você já é assinante?</h2>
+            <div class="d-grid gap-2">
+                <a href="{% url 'barbershop_management:login' %}" class="btn btn-primary btn-lg">Sim, fazer login</a>
+                <a href="url planos" class="btn btn-secondary btn-lg">Não, ver planos</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

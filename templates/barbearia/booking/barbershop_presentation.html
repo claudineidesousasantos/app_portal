@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load barbershop_tags %}
+{% block title %}Bem-vindo à {{ barbershop.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Hero Section -->
+    <div class="jumbotron jumbotron-fluid text-white" style="background: url('{% static 'images/barbershop-hero.jpg' %}') no-repeat center center; background-size: cover;">
+        <div class="container text-center py-5">
+            <h1 class="display-4">{{ barbershop.name }}</h1>
+            <p class="lead">Estilo e tradição em cada corte</p>
+            <a href="#" class="btn btn-primary btn-lg">Agende Agora</a>
+        </div>
+    </div>
+
+    <!-- Sobre Nós -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Sobre Nós</h2>
+            <p class="text-center">{{ barbershop.description }}</p>
+        </div>
+    </section>
+
+    <!-- Nossos Serviços -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Nossos Serviços</h2>
+            <div class="row">
+                {% for service in services %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ service.name }}</h5>
+                            <p class="card-text">{{ service.description }}</p>
+                            <p class="card-text"><strong>Preço: R$ {{ service.price }}</strong></p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Nossos Profissionais -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Nossos Profissionais</h2>
+            <div class="row">
+                {% for employee in employees %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <img src="{{ employee.photo.url }}" class="card-img-top" alt="{{ employee.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ employee.name }}</h5>
+                            <p class="card-text">{{ employee.get_role_display }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Localização -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Nossa Localização</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Endereço:</strong> {{ barbershop.address }}</p>
+                    <p><strong>Telefone:</strong> {{ barbershop.phone }}</p>
+                    <p><strong>E-mail:</strong> {{ barbershop.email }}</p>
+                </div>
+                <div class="col-md-6">
+                    <!-- Aqui você pode adicionar um mapa do Google Maps -->
+                    <div id="map" style="height: 300px; background-color: #ccc;">
+                        <!-- Placeholder para o mapa -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Horário de Funcionamento -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Horário de Funcionamento</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Horário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in barbershop.working_days.all %}
+                    <tr>
+                        <td>{{ day.get_day_display }}</td>
+                        <td>
+                            {% with day_hours=working_hours|filter_by_day:day %}
+                                {% if day_hours %}
+                                    {% for hours in day_hours %}
+                                        {{ hours.start_time|time:"H:i" }} - {{ hours.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Fechado
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center">Nenhum dia de funcionamento definido</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Aqui você pode adicionar JavaScript para inicializar o mapa do Google Maps
+</script>
+{% endblock %}

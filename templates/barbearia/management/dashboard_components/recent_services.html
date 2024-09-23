@@ -1,0 +1,12 @@
+<div class="card">
+    <div class="card-header">
+        Serviços Recentes
+    </div>
+    <ul class="list-group list-group-flush">
+        {% for service in recent_services %}
+            <li class="list-group-item">{{ service.name }} - R$ {{ service.price }}</li>
+        {% empty %}
+            <li class="list-group-item">Nenhum serviço recente.</li>
+        {% endfor %}
+    </ul>
+</div>

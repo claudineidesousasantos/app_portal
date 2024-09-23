@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-header">
+        Funcionários Recentes
+    </div>
+    <ul class="list-group list-group-flush" >
+        {% for employee in recent_employees %}
+         <tr >
+            <li class="list-group-item" id="employee-{{ employee.id }}">
+                {{ employee.name }}
+            </li>
+        
+        {% empty %}
+            <li class="list-group-item">Nenhum funcionário recente.</li>
+        {% endfor %}
+        </tr>
+    </ul>
+</div>

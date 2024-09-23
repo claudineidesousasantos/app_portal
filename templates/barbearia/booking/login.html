@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Barbearia{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+    <p class="mt-3">Não tem uma conta? <a href="{% url 'barbershop_booking:signup' %}">Cadastre-se</a></p>
+</div>
+{% endblock %}

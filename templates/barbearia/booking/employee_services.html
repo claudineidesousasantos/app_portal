@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Serviços de {{ employee.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<h2>Serviços oferecidos por {{ employee.user.get_full_name }}</h2>
+<div class="row">
+    {% for employee_service in services %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ employee_service.service.name }}</h5>
+                <p class="card-text">{{ employee_service.service.description }}</p>
+                <p>Preço: R$ {{ employee_service.service.price }}</p>
+                <p>Duração: {{ employee_service.service.duration }} minutos</p>
+                <a href="{% url 'barbershop_booking:book_appointment' employee.id employee_service.service.id %}" class="btn btn-primary">Agendar</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Este barbeiro não oferece serviços no momento.</p>
+    {% endfor %}
+</div>
+{% endblock %}

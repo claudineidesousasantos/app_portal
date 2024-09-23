@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Serviços - {{ barbershop.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Serviços - {{ barbershop.name }}</h1>
+    <a href="{% url 'barbershop_management:service_create' barbershop.id %}" class="btn btn-primary mb-3">Adicionar Novo Serviço</a>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Duração</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr id="service-{{ service.id }}">
+                <td>{{ service.name }}</td>
+                <td>{{ service.description|truncatewords:10 }}</td>
+                <td>R$ {{ service.price }}</td>
+                <td>{{ service.duration }} minutos</td>
+                <td>
+                    <a href="{% url 'barbershop_management:service_update' barbershop.id service.id %}" class="btn btn-sm btn-warning">Editar</a>
+                    <button class="btn btn-sm btn-danger delete-service" data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">Excluir</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Nenhum serviço cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="{% url 'barbershop_management:dashboard' %}" class="btn btn-secondary mb-3">Voltar</a>
+
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir o serviço "<span id="serviceNameToDelete"></span>"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Confirmar Exclusão</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        var serviceIdToDelete;
+
+        $('.delete-service').click(function() {
+            serviceIdToDelete = $(this).data('service-id');
+            var serviceName = $(this).data('service-name');
+            
+            $('#serviceNameToDelete').text(serviceName);
+            $('#deleteConfirmModal').modal('show');
+        });
+
+        // Adicione este manipulador de eventos para o botão Cancelar
+        $('.modal-footer .btn-secondary').click(function() {
+            $('#deleteConfirmModal').modal('hide');
+        });
+
+        $('#confirmDeleteBtn').click(function() {
+            $.ajax({
+                url: "{% url 'barbershop_management:service_delete' barbershop.id 0 %}".replace('0', serviceIdToDelete),
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function(response) {
+                    if(response.status === 'success') {
+                        $('#service-' + serviceIdToDelete).remove();
+                        $('#deleteConfirmModal').modal('hide');
+                    } else {
+                        alert('Erro ao excluir o serviço. Por favor, tente novamente.');
+                    }
+                },
+                error: function() {
+                    alert('Erro ao excluir o serviço. Por favor, tente novamente.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
