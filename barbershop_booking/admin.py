@@ -14,7 +14,7 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('client', 'employee', 'service', 'barbershop', 'date', 'start_time', 'status')
+    list_display = ('client', 'employee', 'service', 'barbershop', 'date', 'time', 'status')
     list_filter = ('status', 'date', 'barbershop')
     search_fields = ('client__name', 'employee__user__username', 'service__name')
     date_hierarchy = 'date'

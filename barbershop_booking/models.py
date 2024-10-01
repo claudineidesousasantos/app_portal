@@ -57,21 +57,7 @@ class EmployeeService(models.Model):
 
 
 class Appointment(models.Model):
-    """
-    Representa um agendamento de serviço na barbearia.
 
-    Attributes:
-        client (ForeignKey): Cliente que fez o agendamento.
-        employee (ForeignKey): Funcionário designado para o serviço.
-        service (ForeignKey): Serviço agendado.
-        barbershop (ForeignKey): Barbearia onde o serviço será realizado.
-        date (DateField): Data do agendamento.
-        start_time (TimeField): Hora de início do agendamento.
-        end_time (TimeField): Hora de término do agendamento.
-        status (CharField): Status atual do agendamento (agendado, concluído, cancelado).
-        created_at (DateTimeField): Data e hora de criação do agendamento.
-        updated_at (DateTimeField): Data e hora da última atualização do agendamento.
-    """
     STATUS_CHOICES = [
         ('scheduled', 'Scheduled'),
         ('completed', 'Completed'),
@@ -87,18 +73,16 @@ class Appointment(models.Model):
     barbershop = models.ForeignKey(
         Barbershop, on_delete=models.CASCADE, related_name='appointments')
     date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    time = models.TimeField()  # Certifique-se de que este campo existe
+    created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default='scheduled')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.client} - {self.service} on {self.date} at {self.start_time}"
+        return f"{self.service} with {self.employee} on {self.date} at {self.time}"
 
     class Meta:
-        ordering = ['-date', '-start_time']
+        ordering = ['-date', '-time']
 
 
 class Review(models.Model):

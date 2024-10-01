@@ -2,16 +2,35 @@
 {% load static %}
 
 {% load barbershop_tags %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/booking/popup.css' %}">
+{% endblock %}
 {% block title %}Bem-vindo à {{ barbershop.name }}{% endblock %}
 
 {% block content %}
+
+
 <div class="container-fluid p-0">
     <!-- Hero Section -->
     <div class="jumbotron jumbotron-fluid text-white" style="background: url('{% static 'images/barbershop-hero.jpg' %}') no-repeat center center; background-size: cover;">
         <div class="container text-center py-5">
             <h1 class="display-4">{{ barbershop.name }}</h1>
             <p class="lead">Estilo e tradição em cada corte</p>
-            <a href="#" class="btn btn-primary btn-lg">Agende Agora</a>
+            <a href="#"  id="openBookingPopup" class="btn btn-primary btn-lg">Agende Agora</a>
+           
+
+            <div id="bookingPopup" class="popup" >
+                <div class="popup-content">
+                    <span class="close">&times;</span>
+                    <h3>Verificação de Cliente</h3>
+                    <form id="phoneVerificationForm" method="post" action="{% url 'barbershop_booking:verify_phone' barbershop.name %}">
+                        {% csrf_token %}
+                        {{ phone_form.as_p }}
+                        <button type="submit" class="btn btn-primary">Verificar Agendamento</button>
+                        <a href="{% url 'barbershop_booking:client_registration' barbershop.name %}" class="btn btn-info">Cadastrar de Cliente</a>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -50,9 +69,9 @@
             <div class="row">
                 {% for employee in employees %}
                 <div class="col-md-3 mb-3">
-                    <div class="card">
+                    <div class="card employee-card" data-employee-id="{{ employee.id }}">
                         <img src="{{ employee.photo.url }}" class="card-img-top" alt="{{ employee.name }}">
-                        <div class="card-body">
+                        <div class="card-body" >
                             <h5 class="card-title">{{ employee.name }}</h5>
                             <p class="card-text">{{ employee.get_role_display }}</p>
                         </div>
@@ -62,6 +81,21 @@
             </div>
         </div>
     </section>
+
+    <!-- Modal para exibir a agenda -->
+    <div class="modal fade" id="employeeScheduleModal" tabindex="-1" aria-labelledby="employeeScheduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="employeeScheduleModalLabel">Agenda do {{employee.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="employeeSchedule"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Localização -->
     <section class="bg-light py-5">
@@ -95,24 +129,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for day in barbershop.working_days.all %}
+                    
+                    {% for day, hours in working_hours_by_day.items %}
                     <tr>
                         <td>{{ day.get_day_display }}</td>
                         <td>
-                            {% with day_hours=working_hours|filter_by_day:day %}
-                                {% if day_hours %}
-                                    {% for hours in day_hours %}
-                                        {{ hours.start_time|time:"H:i" }} - {{ hours.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    Fechado
-                                {% endif %}
-                            {% endwith %}
+                            {% if hours %}
+                                {% for hour in hours %}
+                                    {% if hour == "Horário não cadastrado" %}
+                                        {{ hour }}
+                                    {% elif hour == "Fechado" %}
+                                        {{ hour }}
+                                    {% else %}
+                                        {{ hour.start_time|time:"H:i" }} - {{ hour.end_time|time:"H:i" }}
+                                        {% if not forloop.last %}, {% endif %}   
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Fechado
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="2" class="text-center">Nenhum dia de funcionamento definido</td>
+                        <td colspan="2" class="text-center">Nenhum horário de funcionamento definido</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -120,10 +160,21 @@
         </div>
     </section>
 </div>
+
+
+
+
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/booking/employee_schedule.js' %}"></script>
+<script src="{% static 'js/booking/popup.js' %}"></script>
 <script>
-    // Aqui você pode adicionar JavaScript para inicializar o mapa do Google Maps
+    document.getElementById('openBookingPopup').addEventListener('click', function() {
+        document.getElementById('bookingPopup').style.display = 'block';
+    });
 </script>
+
+
 {% endblock %}

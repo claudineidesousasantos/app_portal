@@ -5,6 +5,6 @@
     <div class="card-body">
         <a href="{% url 'barbershop_management:employee_create' barbershop.id %}" class="btn btn-primary">Adicionar Funcionário</a>
         <a href="{% url 'barbershop_management:service_create' barbershop.id %}" class="btn btn-success">Adicionar Serviço</a>
-        <a href="{% url 'barbershop_management:generate_booking_link' barbershop.id %}" class="btn btn-info">Gerar Link de Agendamento</a>
+        <a href="{% url 'barbershop_booking:barbershop_presentation' barbershop.name %}" class="btn btn-info">Link de Agendamento</a>
     </div>
 </div>

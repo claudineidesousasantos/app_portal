@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agendar Serviço - {{ barbershop.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Agendar Serviço para {{ client.name }}</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form id="booking-form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Agendar</button>
+        <a href="{% url 'barbershop_booking:barbershop_presentation' barbershop.name %}" class="btn btn-info"> Voltar </a>
+    </form>
+</div>
+
+<!-- Adicione este elemento para passar o nome da barbearia para o JavaScript -->
+<div id="barbershop-name" data-name="{{ barbershop.name }}" style="display: none;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/booking/appointment_booking.js' %}"></script>
+{% endblock %}

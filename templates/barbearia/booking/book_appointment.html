@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Agendar Horário{% endblock %}
+{% load barbershop_tags %}
+{% block title %}Bem-vindo à {{ barbershop.name }}{% endblock %}
 
 {% block content %}
-<h2>Agendar Horário</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Agendar</button>
-</form>
+<div class="container mt-5">
+    <h1>{{ barbershop.name }}</h1>
+    <!-- ... outras informações da barbearia ... -->
+    
+    <h2>Agendar</h2>
+    <form action="{% url 'barbershop_booking:booking_process' barbershop.name %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="phone">Telefone:</label>
+            <input type="tel" name="phone" id="phone" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Agendar</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Aqui você pode adicionar JavaScript para inicializar o mapa do Google Maps
+</script>
 {% endblock %}

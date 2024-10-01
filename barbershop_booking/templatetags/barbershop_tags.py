@@ -4,4 +4,7 @@ register = template.Library()
 
 @register.filter
 def filter_by_day(working_hours, day):
-    return working_hours.filter(day_of_week=day)
+    if not working_hours or not isinstance(working_hours, dict):
+        return []
+    return working_hours.get(day, [])
+

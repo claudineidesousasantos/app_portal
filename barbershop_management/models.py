@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import uuid
 from django.utils import timezone
 from django.core.validators import RegexValidator
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -17,6 +18,7 @@ class Barbershop(models.Model):
         User, on_delete=models.CASCADE, related_name='owned_barbershops')
     code = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     is_open = models.BooleanField(default=True, verbose_name="Aberto")
+    slug = models.SlugField(unique=True, blank=True)
     
     DAYS_OF_WEEK = [
         (0, 'Segunda-feira'),
@@ -35,6 +37,11 @@ class Barbershop(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Employee(models.Model):
@@ -107,7 +114,9 @@ class Service(models.Model):
         return f"{self.name} - {self.barbershop.name}"
 
 
+
 class WorkingHours(models.Model):
+    
     barbershop = models.ForeignKey('Barbershop', on_delete=models.CASCADE, related_name='working_hours')
     day_of_week = models.ForeignKey('DayOfWeek', on_delete=models.CASCADE, related_name='working_hours')
     start_time = models.TimeField()

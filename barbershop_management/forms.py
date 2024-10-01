@@ -8,7 +8,6 @@ class EmployeeForm(forms.ModelForm):
         model = Employee
         fields = ['name', 'phone', 'role',
                   'hire_date', 'is_active', 'barbershop']
-        # Remova 'email' desta lista se não existir mais no modelo
 
 
 class ServiceForm(forms.ModelForm):
@@ -89,3 +88,5 @@ class BarbershopForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput)
+
+

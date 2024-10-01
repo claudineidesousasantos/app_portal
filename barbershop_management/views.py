@@ -175,12 +175,12 @@ def employee_list(request, barbershop_id):
         employee=OuterRef('pk'),
         date__gte=timezone.now().date(),
         status='scheduled'  # Ajuste conforme necessário
-    ).order_by('date', 'start_time').values('date', 'start_time')[:1]
+    ).order_by('date', 'time').values('date', 'time')[:1]
 
     # Anotação para formatar a data e hora
     employees = Employee.objects.filter(barbershop=barbershop).annotate(
         next_appointment_date=Subquery(next_appointment.values('date')),
-        next_appointment_time=Subquery(next_appointment.values('start_time'))
+        next_appointment_time=Subquery(next_appointment.values('time'))
     ).annotate(
         next_appointment=Concat(
             'next_appointment_date',

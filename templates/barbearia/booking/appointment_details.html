@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Detalhes do Agendamento</h2>
+    <p>Cliente: {{ client.name }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div id="calendar"></div>
+        <div id="timeSlots" style="display: none;">
+            <h4>Horários Disponíveis:</h4>
+            <div id="availableSlots"></div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3" id="submitBtn" style="display: none;">Agendar</button>
+    </form>
+</div>
+
+<script>
+// Adicione aqui o JavaScript para o calendário e seleção de horários
+</script>
+{% endblock %}

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}{% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Funcionário{% endblock %}
-
+{% block title %}
+    {% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Funcionário{% endblock %}
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">

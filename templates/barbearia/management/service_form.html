@@ -1,16 +1,27 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}{% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Serviço - {{ barbershop.name }}{% endblock %}
-
+{% block title %}
+    {% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Serviço - {{ barbershop.name }}{% endblock %}
 {% block content %}
 <div class="container mt-4">
-    <h1>{% if service %}Editar{% else %}Adicionar{% endif %} Serviço</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{% url 'barbershop_management:services' barbershop.id %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">{% if service %}Editar{% else %}Adicionar{% endif %} Serviço</h2>
+                </div>
+            
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <a href="{% url 'barbershop_management:services' barbershop.id %}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

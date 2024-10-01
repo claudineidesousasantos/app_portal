@@ -29,12 +29,49 @@ class ClientSignUpForm(UserCreationForm):
             Client.objects.create(user=user, phone=self.cleaned_data['phone'])
         return user
 
-
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['date', 'start_time']
+        fields = ['service', 'employee', 'date', 'time']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
-            'start_time': forms.TimeInput(attrs={'type': 'time'}),
+            'time': forms.TimeInput(attrs={'type': 'time'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date = cleaned_data.get('date')
+        time = cleaned_data.get('time')
+        employee = cleaned_data.get('employee')
+
+        if date and time and employee:
+            barbershop = employee.barbershop
+            day_of_week = date.weekday()
+
+            # Verificar se a barbearia está aberta neste dia
+            if not barbershop.working_days.filter(day=day_of_week).exists():
+                raise forms.ValidationError("A barbearia está fechada neste dia.")
+
+            # Verificar o horário de funcionamento
+            working_hours = barbershop.working_hours.filter(day_of_week__day=day_of_week).first()
+            if working_hours:
+                if time < working_hours.start_time or time > working_hours.end_time:
+                    raise forms.ValidationError("O horário selecionado está fora do horário de funcionamento.")
+            else:
+                raise forms.ValidationError("Não há horário de funcionamento definido para este dia.")
+
+        return cleaned_data
+    def save(self, commit=True):
+        appointment = super().save(commit=False)
+        if commit:
+            appointment.save()
+        return appointment
+
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['name', 'phone']
+
+class PhoneVerificationForm(forms.Form):
+    phone = forms.CharField(max_length=20, label="Telefone")

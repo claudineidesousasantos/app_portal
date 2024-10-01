@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Agendar Serviço em {{ barbershop.name }}</h2>
+    <form method="post" id="bookingForm">
+        {% csrf_token %}
+        <h3>Informações do Cliente</h3>
+        {{ client_form.as_p }}
+
+        <h3>Detalhes do Agendamento</h3>
+        <div class="form-group">
+            <label for="service">Serviço:</label>
+            <select name="service" id="service" class="form-control" required>
+                <option value="">Selecione um serviço</option>
+                {% for service in services %}
+                    <option value="{{ service.id }}">{{ service.name }} - R$ {{ service.price }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="employee">Profissional:</label>
+            <select name="employee" id="employee" class="form-control" required>
+                <option value="">Selecione um profissional</option>
+                {% for employee in employees %}
+                    <option value="{{ employee.id }}">{{ employee.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="calendar"></div>
+        <div id="timeSlots" style="display: none;">
+            <h4>Horários Disponíveis:</h4>
+            <div id="availableSlots"></div>
+        </div>
+        {{ appointment_form.date }}
+        {{ appointment_form.time }}
+        <button type="submit" class="btn btn-primary mt-3" id="submitBtn" style="display: none;">Agendar</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        dateClick: function(info) {
+            getAvailableSlots(info.dateStr);
+        }
+    });
+    calendar.render();
+
+    function getAvailableSlots(date) {
+        var employeeId = document.getElementById('employee').value;
+        if (!employeeId) {
+            alert('Por favor, selecione um profissional primeiro.');
+            return;
+        }
+
+        fetch(`/booking/{{ barbershop.name }}/slots/${employeeId}/${date}/`)
+            .then(response => response.json())
+            .then(data => {
+                var slotsDiv = document.getElementById('availableSlots');
+                slotsDiv.innerHTML = '';
+                data.available_slots.forEach(slot => {
+                    var button = document.createElement('button');
+                    button.textContent = slot;
+                    button.className = 'btn btn-outline-primary m-1';
+                    button.onclick = function() {
+                        selectTimeSlot(date, slot);
+                    };
+                    slotsDiv.appendChild(button);
+                });
+                document.getElementById('timeSlots').style.display = 'block';
+            });
+    }
+
+    function selectTimeSlot(date, time) {
+        document.getElementById('selected_date').value = date;
+        document.getElementById('selected_time').value = time;
+        document.getElementById('submitBtn').style.display = 'block';
+    }
+});
+</script>
+{% endblock %}
